@@ -3,3 +3,14 @@
 .border-custom {
   @apply border-2 border-solid border-black;
 }
+
+.footer {
+  background-image: url("file:///D:/Downloads/wave.svg");
+}
+
+.cream-color {
+  background-color: #fffdd0;
+}
+.cream-color2 {
+  background-color: #fffffd;
+}
