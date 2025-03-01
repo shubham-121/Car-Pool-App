@@ -16,13 +16,16 @@ import MidSection from "./MidSection";
 import Header from "./Header";
 import NavigationHeader from "./NavigationHeader";
 import Footer from "./Footer";
+import TesteMonials from "./TesteMonials";
 
 export default function LandingPage() {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col overflow-x-hidden">
       <Header></Header>
       <NavigationHeader></NavigationHeader>
       <MidSection></MidSection>
+
+      <TesteMonials></TesteMonials>
       <Footer></Footer>
     </div>
   );
