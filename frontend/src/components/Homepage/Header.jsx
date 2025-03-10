@@ -3,6 +3,7 @@ import search from "../../images/search_logo.jpg";
 import taxi from "../../images/taxi_logo.jpg";
 import driver from "../../images/driver_logo.png";
 import user from "../../images/user_logo.png";
+import { useNavigate } from "react-router";
 
 //first header
 export default function Header() {
@@ -45,11 +46,17 @@ function SearchBar() {
 }
 
 function Options() {
+  const navigate = useNavigate();
   return (
     <div className="flex flex-wrap content-center items-center justify-center gap-x-5  ">
       <div className="flex flex-row items-center">
         <img className="h-8 w-8 rounded-full " src={user}></img>
-        <p className="text-[16px] font-semibold">Dashboard</p>
+        <p
+          className="text-[16px] font-semibold"
+          onClick={() => navigate("/login")}
+        >
+          Dashboard / Login
+        </p>
       </div>
       <div className="flex flex-row items-center">
         <img className="h-8 w-8 rounded-full" src={taxi}></img>{" "}
