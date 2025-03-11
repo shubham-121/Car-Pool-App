@@ -3,16 +3,23 @@ import carpool_logo from "../../images/carpool/carpool_logo.avif";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setNotificationMessage } from "../../redux/slices/notificationSlice";
+import {
+  clearLoggedUserName,
+  clearNotificationMessage,
+  setLoggedUserName,
+  setNotificationMessage,
+  toggleNotification,
+} from "../../redux/slices/notificationSlice";
+import Notification from "./Notification";
 
 export default function LogInForm() {
-  //   const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const { isNotification, notificationMessage } = useSelector(
     (store) => store.notification
   );
 
-  console.log(isNotification, notificationMessage);
+  // console.log(isNotification, notificationMessage);
 
   const dispatch = useDispatch();
 
@@ -45,10 +52,11 @@ export default function LogInForm() {
 
       if (res.status === 200) {
         console.log("Successfully logged the user in", data);
-        alert("Successfully logged the user in");
-        // setError("Error in regestering the user");
 
-        // setNotification(true);
+        //set global notification state for notifying the user
+        dispatch(toggleNotification());
+        dispatch(setNotificationMessage(`User Logged In Successfully`)); //set the logged in notification message
+        dispatch(setLoggedUserName(data.userName)); //set the logged username
 
         //reset form data
         setFormData({
@@ -56,7 +64,13 @@ export default function LogInForm() {
           password: "",
         });
 
-        // navigate("/")     //navigate to homepage
+        //wait for 3 seconds,show the user login notification,then redirect to home route:
+        setTimeout(() => {
+          dispatch(toggleNotification());
+          // navigate("/"); //navigate to homepage
+          dispatch(clearNotificationMessage());
+          dispatch(clearLoggedUserName());
+        }, 1500);
       } else {
         console.error("Error:", data.message || "Unknown error");
         alert(data.message || "Error in logging the user.");
@@ -73,6 +87,8 @@ export default function LogInForm() {
 
   return (
     <div className="bg-gray-100 flex justify-center items-center h-screen">
+      {/*render a notifiation for login*/}
+      {isNotification && <Notification></Notification>}
       {/* Left: Image */}
       <div className="w-1/2 h-screen hidden lg:block">
         <img
@@ -81,7 +97,6 @@ export default function LogInForm() {
           className="object-fill w-full h-full"
         />
       </div>
-
       {/* Right: Login Form */}
       <div className="lg:p-36 md:p-52 sm:20 p-8 w-full lg:w-1/2">
         <p className="text-xl font-semibold text-stone-600 text-center  ">

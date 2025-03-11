@@ -2,11 +2,34 @@ import { useNavigate } from "react-router";
 import carpool_logo2 from "../../images/carpool/carpool_logo2.avif";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  clearErrorMessage,
+  clearLoggedUserName,
+  clearNewUserName,
+  clearNotificationMessage,
+  setErrorMessage,
+  setLoggedUserName,
+  setNewUserName,
+  setNotificationMessage,
+  toggleIsNewUser,
+  toggleNotification,
+} from "../../redux/slices/notificationSlice";
+import Notification from "./Notification";
 
 export default function SignUpForm() {
   const navigate = useNavigate();
   const [error, setError] = useState("");
-  const [notification, setNotification] = useState(false);
+
+  const dispatch = useDispatch();
+  const {
+    isNotification,
+    notificationMessage,
+    loggedUserName,
+    errorMessage,
+    isNewUser,
+    newUserName,
+  } = useSelector((store) => store.notification);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -47,9 +70,14 @@ export default function SignUpForm() {
       if (res.status === 200) {
         console.log("Successfully created the user", data);
         alert("Successfully created the user");
-        // setError("Error in regestering the user");
 
-        // setNotification(true);
+        //set global notification state for notifying the user
+        dispatch(toggleNotification());
+        dispatch(setNotificationMessage(`User Created Successfully`)); //set the logged in notification message
+
+        //run only once for new user only
+        dispatch(toggleIsNewUser());
+        dispatch(setNewUserName(data.user.userName)); //set the new username only for once
 
         //reset form data
         setFormData({
@@ -60,23 +88,54 @@ export default function SignUpForm() {
           city: "",
         });
 
+        //wait for 3 seconds,show the user login notification,then redirect to home route:
+        setTimeout(() => {
+          dispatch(toggleNotification());
+          // navigate("/"); //navigate to homepage
+          dispatch(clearNotificationMessage());
+
+          dispatch(toggleIsNewUser());
+          dispatch(clearNewUserName()); //set the new username only for once
+          // dispatch(clearLoggedUserName());
+        }, 1500);
+
         // navigate("/")     //navigate to homepage
       } else {
         console.error("Error:", data.message || "Unknown error");
+        dispatch(
+          setErrorMessage(
+            data?.message
+              ? data.message
+              : "Problem In Creating The User In The DB"
+          )
+        );
         alert(data.message || "Error in creating the user.");
+
+        setTimeout(() => {
+          //clear the errormsg after 2 seconds
+          dispatch(clearErrorMessage());
+        }, 2000);
       }
 
       console.log(data);
     } catch (err) {
-      console.error("Error in signing up the user ", err);
-      alert(
-        "An unexpected error occurred while creating the user. Please try again."
+      console.error("Error:", err.message || "Unknown error");
+      dispatch(
+        setErrorMessage(
+          err?.message ? err.message : "Problem In Creating The User In The DB"
+        )
       );
+
+      setTimeout(() => {
+        //clear the errormsg after 2 seconds
+        dispatch(clearErrorMessage());
+      }, 2000);
     }
   }
 
   return (
     <div className="bg-gray-100 flex justify-center items-center h-screen mt-1 ">
+      {isNotification && <Notification></Notification>}
       {/* Left: Image */}
       <div className="w-1/2 h-screen hidden lg:block">
         <img
