@@ -55,7 +55,14 @@ function Options() {
           className="text-[16px] font-semibold"
           onClick={() => navigate("/login")}
         >
-          Dashboard / Login
+          Dashboard / Login -
+        </p>
+
+        <p
+          className="text-[16px] font-semibold text-center"
+          onClick={() => navigate("/profile")}
+        >
+          Profile
         </p>
       </div>
       <div className="flex flex-row items-center">

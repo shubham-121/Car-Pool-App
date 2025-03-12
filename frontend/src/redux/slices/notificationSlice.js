@@ -4,6 +4,7 @@ const initialState = {
   isNotification: false,
   notificationMessage: "", //notification message content
   loggedUserName: "", //logged username for showing username on notification message
+  isError: false, //for conditionally rendering the error message
   errorMessage: " ", //for error message while creating the user
   isNewUser: false, //only use when the user registers for the first time, for conditional rendering
   newUserName: "", //only use when the user registers for the first time , for storing the new user name only for once for signup notification
@@ -35,6 +36,20 @@ const notificationSlice = createSlice({
       state.loggedUserName = "";
     },
 
+    toggleErrorMessage(state) {
+      state.isError = !state.isError;
+    },
+
+    setErrorMessage(state, action) {
+      state.isError = true;
+      state.errorMessage = action.payload;
+    },
+    clearErrorMessage(state) {
+      state.isError = false;
+      state.errorMessage = "";
+    },
+
+    //these actions below only run once ,when the user is newly creeated
     toggleIsNewUser(state) {
       state.isNewUser = !state.isNewUser;
     },
@@ -44,13 +59,6 @@ const notificationSlice = createSlice({
     },
     clearNewUserName(state) {
       state.newUserName = "";
-    },
-
-    setErrorMessage(state, action) {
-      state.errorMessage = action.payload;
-    },
-    clearErrorMessage(state) {
-      state.errorMessage = "";
     },
   },
 });
@@ -65,6 +73,7 @@ export const {
   clearLoggedUserName,
   setErrorMessage,
   clearErrorMessage,
+  toggleErrorMessage,
   toggleIsNewUser,
   setNewUserName,
   clearNewUserName,

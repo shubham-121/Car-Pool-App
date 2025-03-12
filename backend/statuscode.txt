@@ -1,0 +1,7 @@
+
+
+Email not found	404 ->  Not Found          ->	No user exists with that email.
+Incorrect password	->  401 Unauthorized   ->	User exists, but the password is wrong.
+Missing fields	400 ->  Bad Request        ->	Required fields are missing.
+Successful login	->  200 OK             ->	Login successful.
+Server issue 500 -> Internal Server Error  ->	Internal server error occurred.->

@@ -12,12 +12,15 @@ import {
   setLoggedUserName,
   setNewUserName,
   setNotificationMessage,
+  toggleErrorMessage,
   toggleIsNewUser,
   toggleNotification,
 } from "../../redux/slices/notificationSlice";
 import Notification from "./Notification";
 
 export default function SignUpForm() {
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const navigate = useNavigate();
   const [error, setError] = useState("");
 
@@ -29,6 +32,7 @@ export default function SignUpForm() {
     errorMessage,
     isNewUser,
     newUserName,
+    isError,
   } = useSelector((store) => store.notification);
 
   const [formData, setFormData] = useState({
@@ -55,10 +59,10 @@ export default function SignUpForm() {
   async function handleOnSubmit(e) {
     e.preventDefault();
 
-    // console.log(e.target.value);
+    // console.log(e.target.value); /api/auth/login
 
     try {
-      const res = await fetch("http://localhost:5000/signup", {
+      const res = await fetch(`${API_URL}/api/auth/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -66,6 +70,8 @@ export default function SignUpForm() {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
+
+      console.log("user ddata front:", data);
 
       if (res.status === 200) {
         console.log("Successfully created the user", data);
@@ -102,6 +108,9 @@ export default function SignUpForm() {
         // navigate("/")     //navigate to homepage
       } else {
         console.error("Error:", data.message || "Unknown error");
+
+        dispatch(toggleErrorMessage());
+
         dispatch(
           setErrorMessage(
             data?.message
@@ -109,7 +118,7 @@ export default function SignUpForm() {
               : "Problem In Creating The User In The DB"
           )
         );
-        alert(data.message || "Error in creating the user.");
+        // alert(data.message || "Error in creating the user.");
 
         setTimeout(() => {
           //clear the errormsg after 2 seconds
@@ -136,6 +145,7 @@ export default function SignUpForm() {
   return (
     <div className="bg-gray-100 flex justify-center items-center h-screen mt-1 ">
       {isNotification && <Notification></Notification>}
+      {isError && <Notification></Notification>}
       {/* Left: Image */}
       <div className="w-1/2 h-screen hidden lg:block">
         <img

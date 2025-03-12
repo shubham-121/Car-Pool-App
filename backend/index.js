@@ -13,6 +13,10 @@ const connectToDB = require("./connection.js");
 const userSignup = require("./Controllers/auth/signup.js");
 const userLogin = require("./Controllers/auth/login.js");
 
+//custom middlewares
+const verifyToken = require("./Controllers/auth/verifyJwt.js");
+const verifyAccessToken = require("./Controllers/auth/verifyJwt.js");
+
 //express instance
 const app = express();
 
@@ -41,39 +45,16 @@ app.get("/", (req, res) => {
 
 //1- User Auth routes - signup, login
 
-app.post("/signup", userSignup); //signup route
+app.post("/api/auth/signup", userSignup); //signup route
 
-app.post("/login", userLogin);
+app.post("/api/auth/login", userLogin); //login route
 
-// app.post("/login", async (req, res) => {
-// const body = req.body;
-// const { email, password } = body;
-// //field validation
-// if (!email || !password) {
-//   return res
-//     .status(400)
-//     .json({ message: "Required Fields Are Missing, Please Enter All" });
-// }
-// //search in DB
-// const searchedUser = await UserSignup.findOne({
-//   userEmail: email,
-//   userPassword: password,
-// });
-// if (!searchedUser) {
-//   return res
-//     .status(400)
-//     .json({ message: "Cannot Find The User In The Db. SignUp First" });
-// }
-// console.log("Searched user found in the DB", searchedUser);
-// //assigns jwt
-// return res.status(200).json({
-//   message: "User Found Successfully In The DB",
-//   userName: searchedUser.userName,
-//   userEmail: searchedUser.userEmail,
-//   userPhoneNumber: searchedUser.userPhoneNumber,
-// });
-// console.log("login", body);
-// });
+//2- user routes
+app.get("/api/user/profile", verifyAccessToken, (req, res) => {
+  return res.status(200).json({
+    message: "User profile route verified",
+  });
+});
 
 //start the server
 const PORT = process.env.PORT;

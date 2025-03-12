@@ -13,6 +13,26 @@ async function userSignup(req, res) {
     });
   }
 
+  //check if user exsists already with email or phone number
+
+  const exsistingUser = await UserSignup.findOne({ userEmail: email });
+  const exsistingUser2 = await UserSignup.findOne({
+    userPhoneNumber: phoneNumber,
+  });
+
+  console.log("exsisting user found with same email:", exsistingUser);
+  console.log("exsisting user found with same phone:", exsistingUser2);
+
+  if (exsistingUser || exsistingUser2) {
+    return res
+      .status(400)
+      .json(
+        exsistingUser
+          ? { message: "User Already Exsists, With The Same Email." }
+          : { message: "User Already Exsists, With The Same Phone Number." }
+      );
+  }
+
   //2- create a new user with the data
   try {
     const newUser = await UserSignup.create({
@@ -30,6 +50,8 @@ async function userSignup(req, res) {
     }
 
     console.log("New user created successfully in the DB:", newUser);
+
+    //assign token jwt
 
     // 3-send response to frontend
     return res.status(200).json({

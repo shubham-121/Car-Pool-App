@@ -28,8 +28,12 @@ export default function Notification() {
     loggedUserName,
     isNewUser,
     newUserName,
+    isError,
+    errorMessage,
   } = useSelector((store) => store.notification);
   // const dispacth = useDispatch();
+
+  console.log(isError, errorMessage);
 
   return (
     <div className=" flex max-w-md bg-stone-300 shadow-lg rounded-lg overflow-hidden fixed top-1 left-1/2 -translate-x-1/2">
@@ -42,7 +46,9 @@ export default function Notification() {
         <div className="mx-3">
           {/* conditionally show notif if user is new (only once,during first time) or old */}
           <h2 className="text-xl font-semibold text-gray-800">
-            {isNewUser
+            {isError
+              ? `${errorMessage}`
+              : isNewUser
               ? `Welcome ${newUserName}`
               : `Welcome Back ${loggedUserName} !`}
           </h2>
