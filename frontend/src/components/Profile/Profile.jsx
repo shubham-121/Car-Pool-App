@@ -10,6 +10,7 @@ import {
   toggleNotification,
 } from "../../redux/slices/notificationSlice";
 import Notification from "../UserAuthentication/Notification";
+import UserProfile from "./UserProfile";
 
 export default function Profile() {
   const API_URL = import.meta.env.VITE_API_URL;
@@ -47,7 +48,7 @@ export default function Profile() {
 
         if (res.status === 200) {
           dispatch(toggleNotification()); //for conditional rendering
-          dispatch(setNotificationMessage(`User Verified Successfully`)); //set the logged in notification message
+          dispatch(setNotificationMessage(`User Valid`)); //set the logged in notification message
 
           setTimeout(() => {
             dispatch(clearErrorMessage());
@@ -79,10 +80,13 @@ export default function Profile() {
   }, [API_URL, accessToken, dispatch]);
 
   return (
-    <>
+    <div>
       {isNotification && <Notification></Notification>}
       {isError && <Notification></Notification>}
-      <div className="p-6 bg-gray-100 min-h-screen">
+      <div>
+        <UserProfile></UserProfile>
+      </div>
+      {/* <div className="p-6 bg-gray-100 min-h-screen">
         <h1 className="text-2xl font-bold mb-4">👤 Profile</h1>
 
         <div className="bg-white shadow p-6 rounded">
@@ -101,8 +105,8 @@ export default function Profile() {
           <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">
             Edit Profile
           </button>
-        </div>
-      </div>
-    </>
+        </div> */}
+      {/* </div> */}
+    </div>
   );
 }

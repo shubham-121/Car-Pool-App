@@ -8,7 +8,7 @@ import { appRouter } from "./appRouter.jsx";
 import store from "./redux/store";
 import { Provider } from "react-redux";
 
-console.log(store);
+// console.log(store);
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
