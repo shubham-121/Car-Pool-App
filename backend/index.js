@@ -49,7 +49,7 @@ app.post("/api/auth/signup", userSignup); //signup route
 
 app.post("/api/auth/login", userLogin); //login route
 
-//2- user routes
+//2- user routes (all are protected routes)
 app.get("/api/user/profile", verifyAccessToken, (req, res) => {
   return res.status(200).json({
     message: "User profile route verified",

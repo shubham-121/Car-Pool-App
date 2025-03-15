@@ -8,6 +8,8 @@ import Dashboard from "./components/Dashboard/Dashboard";
 import Profile from "./components/Profile/Profile";
 import Header from "./components/Homepage/Header";
 import ParentHeader from "./components/Utils/ParentHeader";
+import RidePost from "./components/Rides/RidePosting/RidePost";
+import ContactUs from "./components/Others/ContactUs";
 
 const appRouter = createBrowserRouter([
   {
@@ -50,6 +52,22 @@ const appRouter = createBrowserRouter([
         <Profile></Profile>
       </ProtectedRoute>
     ),
+    children: [
+      {
+        index: true,
+        element: <ParentHeader></ParentHeader>,
+      },
+    ],
+  },
+
+  {
+    path: "/postrides",
+    element: <RidePost></RidePost>,
+  },
+
+  {
+    path: "/contactus",
+    element: <ContactUs></ContactUs>,
   },
 ]);
 
