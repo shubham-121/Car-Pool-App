@@ -46,6 +46,23 @@ export default function ParentHeader() {
               </li>
               <li>
                 <button
+                  onClick={() => navigate("/postrides")}
+                  className="hover:text-gray-200"
+                >
+                  Post Ride
+                </button>
+              </li>
+
+              <li>
+                <button
+                  onClick={() => navigate("/getrides")}
+                  className="hover:text-gray-200"
+                >
+                  Search Rides
+                </button>
+              </li>
+              <li>
+                <button
                   onClick={() => navigate("/dashboard")}
                   className="hover:text-gray-200"
                 >

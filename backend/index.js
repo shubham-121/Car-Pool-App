@@ -7,11 +7,15 @@ const dotenv = require("dotenv");
 
 //Models (DB files)
 const UserSignup = require("./Models/UserSchema/userSignup");
+const Ride = require("./Models/RidesSchema/postRide.js");
 const connectToDB = require("./connection.js");
 
 //controllers (Routes files)
 const userSignup = require("./Controllers/auth/signup.js");
 const userLogin = require("./Controllers/auth/login.js");
+
+const postRide = require("./Controllers/rides/postRide.js");
+const getRide = require("./Controllers/rides/getRide.js");
 
 //custom middlewares
 const verifyToken = require("./Controllers/auth/verifyJwt.js");
@@ -55,6 +59,17 @@ app.get("/api/user/profile", verifyAccessToken, (req, res) => {
     message: "User profile route verified",
   });
 });
+
+// 3- rides
+// post ride
+app.post("/api/rides/post", verifyAccessToken, postRide);
+
+//get ride
+app.get(
+  "/api/rides/get/:source/:destination/:date?",
+  verifyAccessToken,
+  getRide
+);
 
 //start the server
 const PORT = process.env.PORT;

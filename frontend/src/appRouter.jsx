@@ -10,6 +10,8 @@ import Header from "./components/Homepage/Header";
 import ParentHeader from "./components/Utils/ParentHeader";
 import RidePost from "./components/Rides/RidePosting/RidePost";
 import ContactUs from "./components/Others/ContactUs";
+import RideSearch from "./components/Rides/RideSearching/RideSearch";
+import ShowRides from "./components/Rides/RideSearching/ShowRides";
 
 const appRouter = createBrowserRouter([
   {
@@ -62,7 +64,29 @@ const appRouter = createBrowserRouter([
 
   {
     path: "/postrides",
-    element: <RidePost></RidePost>,
+    element: (
+      <ProtectedRoute>
+        <RidePost></RidePost>
+      </ProtectedRoute>
+    ),
+  },
+
+  {
+    path: "/getrides",
+    element: (
+      <ProtectedRoute>
+        <RideSearch></RideSearch>
+      </ProtectedRoute>
+    ),
+  },
+
+  {
+    path: "/getrides/:source/:destination/:date?",
+    element: (
+      <ProtectedRoute>
+        <ShowRides></ShowRides>
+      </ProtectedRoute>
+    ),
   },
 
   {

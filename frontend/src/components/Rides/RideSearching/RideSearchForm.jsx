@@ -1,25 +1,25 @@
-import auto from "../../../../images/rides/auto.jpg";
-import hatchback from "../../../../images/rides/hatchback.webp";
-import scooter from "../../../../images/rides/scooter.jpg";
-import sedan from "../../../../images/rides/sedan.png";
-import suv from "../../../../images/rides/suv.png";
-import carpool2 from "../../../../images/rides/carpool2.jpg";
-import { useState } from "react";
-import fetchRequest from "../../../Utils/fetchRequest";
-import { useSelector } from "react-redux";
+// import carpool2 from "../../../../images/rides/carpool2.jpg";
 
-export default function RidePostForm() {
+import { useState } from "react";
+
+import { useSelector } from "react-redux";
+import fetchRequest from "../../Utils/fetchRequest";
+import { useNavigate } from "react-router";
+
+export default function RideSearchForm() {
   const [formData, setFormData] = useState({
     source: "",
     destination: "",
     date: "",
-    time: "",
-    availableSeats: "",
-    seatPrice: "",
-    vehicleType: "",
-    note: "",
-    paymentMethod: "",
+    // time: "",
+    // availableSeats: "",
+    // seatPrice: "",
+    // vehicleType: "",
+    // note: "",
+    // paymentMethod: "",
   });
+
+  const navigate = useNavigate();
 
   const { isAuthenticated, accessToken, authUserData } = useSelector(
     (store) => store.authentication
@@ -37,40 +37,35 @@ export default function RidePostForm() {
     console.log(`target: ${name}  value: ${value}`);
   }
 
-  function handleBtnData(e) {
-    const clickedValue = e.currentTarget.dataset.value;
-    console.log(clickedValue);
+  async function handleGetRides(e) {
+    // const reqPath = `/api/rides/get?source=${formData.source}&destination=${formData.destination}`; //send post ride req to this path
+    let reqPath = `/api/rides/get/${formData.source}/${formData.destination}/${formData.date}`; //send post ride req to this path
 
-    setFormData({
-      ...formData,
-      vehicleType: clickedValue,
-      paymentMethod: clickedValue,
-    });
-  }
-
-  async function handlePostRides(e) {
-    // const API_URL = import.meta.env.VITE_API_URL;
-
-    const reqPath = "/api/rides/post"; //send post ride req to this path
+    if (formData.date) {
+      reqPath += `/${formData.date}`;
+    }
 
     e.preventDefault();
     //  async function fetchRequest(reqPath, reqMethod, reqHeaders = null,requestData)
     const reqResponse = await fetchRequest(
       reqPath,
-      "POST",
+      "GET",
       {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
-      },
-      JSON.stringify(formData)
+      }
+      //   JSON.stringify(formData)
     );
-    console.log("Post Ride Request triggered", reqResponse);
+    console.log("Get Rides Request triggered", reqResponse);
+
+    //navigate to the (/api/rides/get/${formData.source}/${formData.destination}/${formData.date}) in new page
+    navigate(`/getrides/${formData.source}/${formData.destination}`);
   }
 
   return (
     <div
       className="flex flex-col lg:flex-row justify-center items-start gap-2 p-6 bg-cover bg-center bg-no-repeat "
-      style={{ backgroundImage: `url(${carpool2})` }}
+      //   style={{ backgroundImage: `url(${carpool2})` }}
     >
       {/* Ride Posting Form */}
       <div className="p-6 bg-gray-100 rounded-md shadow-md w-full max-w-md max-h-[700px] overflow-y-auto">
@@ -109,7 +104,7 @@ export default function RidePostForm() {
               value={formData.date}
             />
           </div>
-          <div className="flex-1">
+          {/* <div className="flex-1">
             <label className="font-semibold">⏰ Time</label>
             <input
               onChange={handleFormChange}
@@ -118,10 +113,10 @@ export default function RidePostForm() {
               type="time"
               value={formData.time}
             />
-          </div>
+          </div> */}
         </div>
 
-        {/* Available Seats & Price Per Seat in a single row */}
+        {/* Available Seats & Price Per Seat in a single row
         <div className="mt-4 flex flex-col lg:flex-row gap-2">
           <div className="flex-1">
             <label className="font-semibold">🪑 Available Seats</label>
@@ -145,10 +140,10 @@ export default function RidePostForm() {
               placeholder="Enter price per seat"
             />
           </div>
-        </div>
+        </div> */}
 
         {/* Vehicle Selection */}
-        <div className="mt-4">
+        {/* <div className="mt-4">
           <label className="font-semibold">🚗 Select Vehicle Type:</label>
           <div className="flex gap-2 mt-2 flex-wrap">
             {[
@@ -177,10 +172,10 @@ export default function RidePostForm() {
               </button>
             ))}
           </div>
-        </div>
+        </div> */}
 
         {/* Additional Notes */}
-        <div className="mt-4">
+        {/* <div className="mt-4">
           <label className="font-semibold">📝 Additional Notes</label>
           <textarea
             onChange={handleFormChange}
@@ -190,10 +185,10 @@ export default function RidePostForm() {
             rows="3"
             placeholder="Any extra details..."
           ></textarea>
-        </div>
+        </div> */}
 
         {/* Payment Method */}
-        <div className="mt-4">
+        {/* <div className="mt-4">
           <label className="font-semibold block">💳 Payment Method</label>
           <div className="flex gap-2 mt-2">
             {["Cash", "Net Banking", "Debit Card"].map((method) => (
@@ -209,13 +204,13 @@ export default function RidePostForm() {
               </button>
             ))}
           </div>
-        </div>
+        </div> */}
 
         {/* Submit Button */}
         <div className="mt-4 flex justify-center">
           <button
             className="bg-yellow-400 text-black px-6 py-2 rounded-md font-semibold hover:bg-yellow-500 transition"
-            onClick={handlePostRides}
+            onClick={handleGetRides}
           >
             Submit Ride
           </button>
