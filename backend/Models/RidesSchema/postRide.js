@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const rideSchema = new mongoose.Schema(
   {
     driver: {
+      //logged user id refernce
       type: mongoose.Schema.Types.ObjectId,
       ref: "signups",
       required: true,

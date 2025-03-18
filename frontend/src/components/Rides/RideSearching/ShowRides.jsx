@@ -1,4 +1,4 @@
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import fetchRequest from "../../Utils/fetchRequest";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -67,10 +67,15 @@ export default function ShowRides() {
   );
 }
 function RenderCards({ ride }) {
-  const { rideSource, rideDestination, rideDate } = ride;
+  console.log(ride);
+  const { rideSource, rideDestination, rideDate, _id: rideID } = ride;
+  const navigate = useNavigate();
 
   function handleCardClick() {
-    // navigate(`/ride/${ride._id}`); // Navigate to ride details page
+    navigate(`/ride/${rideID}`); // Navigate to ride details page
+    // navigate(
+    //   `/getrides/${rideSource}&${rideDestination}&${rideDate}/${rideID}`
+    // );
   }
 
   function formatDate(isostring) {

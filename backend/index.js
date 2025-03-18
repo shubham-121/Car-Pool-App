@@ -8,6 +8,7 @@ const dotenv = require("dotenv");
 //Models (DB files)
 const UserSignup = require("./Models/UserSchema/userSignup");
 const Ride = require("./Models/RidesSchema/postRide.js");
+const Booking = require("./Models/BookingSchema/bookingRide.js");
 const connectToDB = require("./connection.js");
 
 //controllers (Routes files)
@@ -16,6 +17,9 @@ const userLogin = require("./Controllers/auth/login.js");
 
 const postRide = require("./Controllers/rides/postRide.js");
 const getRide = require("./Controllers/rides/getRide.js");
+const rideDetails = require("./Controllers/rides/rideDetails.js");
+
+const postBooking = require("./Controllers/bookings/postBooking.js");
 
 //custom middlewares
 const verifyToken = require("./Controllers/auth/verifyJwt.js");
@@ -70,6 +74,12 @@ app.get(
   verifyAccessToken,
   getRide
 );
+
+//get ride details
+app.get("/api/rides/:id", verifyAccessToken, rideDetails);
+
+//post confirm ride details
+app.post("/api/bookings", verifyAccessToken, postBooking);
 
 //start the server
 const PORT = process.env.PORT;

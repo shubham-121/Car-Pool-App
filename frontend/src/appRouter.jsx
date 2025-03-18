@@ -12,6 +12,7 @@ import RidePost from "./components/Rides/RidePosting/RidePost";
 import ContactUs from "./components/Others/ContactUs";
 import RideSearch from "./components/Rides/RideSearching/RideSearch";
 import ShowRides from "./components/Rides/RideSearching/ShowRides";
+import RideDetails from "./components/Rides/RideSearching/RideDetails";
 
 const appRouter = createBrowserRouter([
   {
@@ -81,10 +82,19 @@ const appRouter = createBrowserRouter([
   },
 
   {
-    path: "/getrides/:source/:destination/:date?",
+    path: "/getrides/:source/:destination/:date?", //date is optional here
     element: (
       <ProtectedRoute>
         <ShowRides></ShowRides>
+      </ProtectedRoute>
+    ),
+  },
+
+  {
+    path: `/ride/:rideID`,
+    element: (
+      <ProtectedRoute>
+        <RideDetails></RideDetails>
       </ProtectedRoute>
     ),
   },
