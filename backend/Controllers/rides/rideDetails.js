@@ -3,23 +3,37 @@ const UserSignup = require("../../Models/UserSchema/userSignup.js");
 const Ride = require("../../Models/RidesSchema/postRide.js");
 async function rideDetails(req, res) {
   const { id: rideID } = req.params;
+
+  const body = req.user;
+  const { email } = body;
   console.log("Ride id:", rideID);
 
+  // use email to get the user._id, then query the booking model with the user._id
+
   try {
-    //fetch ride info
+    //1- get the logged user first , return both user_id and ride_id so that they can be referred in the booking table
+    const currUser = await UserSignup.findOne({ userEmail: email }); //logged user
+    if (!currUser) {
+      return res.status(400).json({ message: "Error in finding the user" });
+    }
+    const { _id: currUserID } = currUser;
+
+    ////2- get the ride info
     const rideInfo = await Ride.findOne({ _id: rideID });
-    const userInfo = await UserSignup.findOne({ _id: rideInfo.driver });
+    // const currUser = await UserSignup.findOne({ _id: rideInfo.driver }); // this return the host user
 
-    //fetch the user info also here
+    //3- get the host  driver info also
+    const hostInfo = await UserSignup.findOne({ _id: rideInfo.driver });
 
-    if (rideInfo && userInfo) {
-      console.log("Ride info from backend", rideInfo, userInfo);
+    if (rideInfo && currUser && hostInfo) {
+      console.log("Ride info from backend", rideInfo, currUser, hostInfo);
 
       return res.status(200).json({
         message: "Ride details are",
         rideID: rideID,
         rideInfo: rideInfo,
-        userInfo: userInfo,
+        currUser: currUser,
+        hostInfo: hostInfo,
       });
     } else {
       console.error("Error in fetching the clicked ride details");
@@ -27,7 +41,8 @@ async function rideDetails(req, res) {
         message: "Not able to find the ride",
         rideID: rideID,
         rideInfo: rideInfo,
-        userInfo: userInfo,
+        currUser: currUser,
+        hostInfo: hostInfo,
       });
     }
   } catch (err) {

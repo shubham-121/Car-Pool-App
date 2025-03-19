@@ -3,17 +3,17 @@ const mongoose = require("mongoose");
 const bookingSchema = new mongoose.Schema(
   {
     rideID: {
-      //which ride is being booked
+      //which ride is being booked(ride details)
       type: mongoose.Schema.Types.ObjectId,
-      ref: "rides",
+      ref: "Ride",
       required: true,
       index: true,
     },
 
     passengerID: {
-      //who booked the ride
+      //who booked the ride(user details)
       type: mongoose.Schema.Types.ObjectId,
-      ref: "signups",
+      ref: "signup",
       required: true,
       index: true,
     },

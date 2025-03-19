@@ -20,6 +20,7 @@ const getRide = require("./Controllers/rides/getRide.js");
 const rideDetails = require("./Controllers/rides/rideDetails.js");
 
 const postBooking = require("./Controllers/bookings/postBooking.js");
+const getBookingsData = require("./Controllers/bookings/getBookingsForDriver.js");
 
 //custom middlewares
 const verifyToken = require("./Controllers/auth/verifyJwt.js");
@@ -75,11 +76,14 @@ app.get(
   getRide
 );
 
-//get ride details
+//get- ride details
 app.get("/api/rides/:id", verifyAccessToken, rideDetails);
 
-//post confirm ride details
+//post- confirm ride details
 app.post("/api/bookings", verifyAccessToken, postBooking);
+
+//get - fetch the rides requested(user)  or rides posted(host) frrom the DB using all 3 tables
+app.get("/api/bookings/driver", verifyAccessToken, getBookingsData);
 
 //start the server
 const PORT = process.env.PORT;

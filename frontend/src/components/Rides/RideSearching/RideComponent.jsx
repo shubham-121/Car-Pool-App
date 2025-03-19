@@ -1,7 +1,12 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import fetchRequest from "../../Utils/fetchRequest";
 import formatDate from "../../Utils/formatDate";
 import { useState } from "react";
+import {
+  clearNotificationMessage,
+  setNotificationMessage,
+} from "../../../redux/slices/notificationSlice";
+import Notification from "../../UserAuthentication/Notification";
 
 export default function RideComponent({
   rideDetails,
@@ -9,21 +14,27 @@ export default function RideComponent({
   setTotalPassangers,
 }) {
   const { accessToken } = useSelector((store) => store.authentication);
+  const { isNotification } = useSelector((store) => store.notification);
+
+  const dispatch = useDispatch();
 
   console.log(rideDetails);
 
   const bookingData = {
-    rideID: rideDetails.rideInfo?._id,
-    passengerID: rideDetails.userInfo?._id,
+    rideID: rideDetails.rideInfo?._id, //selected ride id
+    passengerID: rideDetails.currUser?._id, //logged in userid only not the host
+    // passengerID: rideDetails.userInfo?._id, //logged in userid only not the host
     seatsBooked: totalPassangers,
     totalPrice: totalPassangers * rideDetails.rideInfo?.ridePricePerSeat,
     rideStatus: "Pending",
     paymentStatus: "Pending",
   };
 
+  console.log("Booking Data", bookingData);
+
   //for handling the available seats afer bookinng , UI update
   const [reduceSeats, setReduceSeats] = useState(
-    rideDetails?.rideInfo?.rideAvailableSeats || 0
+    rideDetails?.rideInfo?.rideAvailableSeats || 10
   );
 
   // confirmRide.reduceSeats.rideAvailableSeats
@@ -57,6 +68,13 @@ export default function RideComponent({
 
       console.log("Confirmed the booking ride", confirmRide);
       //show notification
+      handleNotification("Confirmed the booking ride");
+      // dispatch(setNotificationMessage("Confirmed the booking ride"));
+
+      // //clear notification
+      // setTimeout(() => {
+      //   dispatch(clearNotificationMessage());
+      // }, 3000);
       alert("Seats confirmed");
     } catch (err) {
       console.error("Error booking ride:", err);
@@ -64,8 +82,19 @@ export default function RideComponent({
     }
   }
 
+  function handleNotification(msg) {
+    //show notification
+    dispatch(setNotificationMessage(msg));
+
+    //clear notification
+    setTimeout(() => {
+      dispatch(clearNotificationMessage());
+    }, 3000);
+  }
+
   return (
     <div className="max-w-3xl mx-auto p-6 bg-amber-50 border-4 border-amber-100 shadow-lg rounded-lg">
+      {isNotification && <Notification></Notification>}
       {/* Ride ID */}
       <h2 className="text-3xl font-bold text-center text-blue-600 mb-4">
         {/* 🚗 Ride ID: {rideID} */}
@@ -138,12 +167,13 @@ export default function RideComponent({
 
         {/* User Info */}
         <div className="ml-4">
+          <p className=" font-semibold text-[15px]">Host Details</p>
           <p className="text-lg font-semibold text-gray-800">
-            {rideDetails.userInfo?.userName}
+            {rideDetails.hostInfo?.userName}
           </p>
-          <p className="text-gray-600">{rideDetails.userInfo?.userEmail}</p>
+          <p className="text-gray-600">{rideDetails.hostInfo?.userEmail}</p>
           <p className="text-gray-600">
-            {rideDetails.userInfo?.userPhoneNumber}
+            {rideDetails.hostInfo?.userPhoneNumber}
           </p>
           <p className="text-yellow-500 mt-1">⭐ Rating: 5/5 (3 ratings)</p>
         </div>
@@ -204,7 +234,7 @@ export default function RideComponent({
           ) : (
             <button
               className="mt-4 px-6 py-2 bg-gray-600 text-white font-bold rounded-md hover:bg-green-700 transition hover:scale-90 cursor-not-allowed"
-              onClick={() => alert("Sorry no seats are available")}
+              onClick={() => handleNotification("Sorry no seats are available")}
             >
               ❌ No seats available
             </button>

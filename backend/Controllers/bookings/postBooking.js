@@ -1,3 +1,5 @@
+// sends booking req. creates a new booking in booking schema
+
 const Booking = require("../../Models/BookingSchema/bookingRide.js");
 const Ride = require("../../Models/RidesSchema/postRide.js");
 
