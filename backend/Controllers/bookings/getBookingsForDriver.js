@@ -26,10 +26,11 @@ async function getBookingsData(req, res) {
     //   .populate("UserSignup", "userName userEmail userPhoneNumber");
 
     const requestedRides = await Booking.find({ passengerID: currUserID })
-      .populate(
-        "rideID",
-        "rideSource rideDestination rideDate rideTime rideAvailableSeats ridePricePerSeat driver"
-      )
+      .populate({
+        path: "rideID",
+        select:
+          "rideSource rideDestination rideDate rideTime rideAvailableSeats ridePricePerSeat driver",
+      })
       .populate("passengerID", "userName userEmail userPhoneNumber");
 
     if (!requestedRides) {
@@ -42,12 +43,32 @@ async function getBookingsData(req, res) {
 
     console.log("Requested ride finded", requestedRides);
 
+    //  2. Find rides the user has hosted (Driver)
+    const hostedRides = await Booking.find()
+      .populate({
+        path: "rideID",
+        match: { driver: currUserID }, // ✅ Get only rides where user is the driver
+        select: "rideSource rideDestination rideDate rideTime driver",
+      })
+      .populate("passengerID", "userName userEmail userPhoneNumber");
+
+    console.log("Hosted rides", hostedRides);
+
+    // ✅ 3. Filter out empty results (if ride doesn't belong to the host)
+    // const filteredHostedRides = hostedRides.filter(
+    //   (ride) => ride.rideID !== null
+    // );
+
+    // console.log("🚗 Hosted Rides:", filteredHostedRides);
+    // console.log("🧑‍🚀 Passenger Rides:", requestedRides);
+
     // 3- use the requestedRides to extract the ride details(source,destination,date,seats booked, price per seat) using refernce of booking table with the ride table
 
     return res.status(200).json({
       message: "User bookings retrieved successfully",
       allRequestedRides: requestedRides,
       currLoggedUser: currUser,
+      hostedRides: hostedRides,
     });
   } catch (err) {
     console.error("Error in finding user", err.message);

@@ -59,20 +59,42 @@ export default function Dashboard() {
         </div>
 
         {/* Rides Posted */}
+        {/*  Heading for Requested Rides (User) */}
         <div className="space-y-6">
-          <p className="text-2xl font-bold text-center font-mono">
-            Requested Rides
-          </p>
-          {dashboardData?.allRequestedRides?.length > 0 &&
-            dashboardData?.allRequestedRides.map((ride, indx) => (
-              <RenderPostedRides
-                key={indx}
-                ride={ride}
-                dashboardData={dashboardData}
-                setDashboardData={setDashboardData}
-                currUserID={dashboardData.currLoggedUser._id}
-              ></RenderPostedRides>
-            ))}
+          {dashboardData?.allRequestedRides?.length > 0 && (
+            <>
+              <p className="text-2xl font-bold text-center font-mono">
+                Rides You Have Booked Previously
+              </p>
+              {dashboardData?.allRequestedRides.map((ride, indx) => (
+                <RenderPostedRides
+                  key={indx}
+                  ride={ride}
+                  dashboardData={dashboardData}
+                  setDashboardData={setDashboardData}
+                  currUserID={dashboardData.currLoggedUser._id}
+                ></RenderPostedRides>
+              ))}
+            </>
+          )}
+
+          {/*  Heading for Hosted Rides by user (Host) */}
+          {dashboardData?.hostedRides?.length > 0 && (
+            <>
+              <p className="text-2xl font-bold text-center font-mono">
+                Ride Requests for Your Hosted Rides
+              </p>
+              {dashboardData?.hostedRides.map((ride, indx) => (
+                <RenderPostedRides
+                  key={indx}
+                  ride={ride}
+                  dashboardData={dashboardData}
+                  setDashboardData={setDashboardData}
+                  currUserID={dashboardData.currLoggedUser._id}
+                ></RenderPostedRides>
+              ))}
+            </>
+          )}
         </div>
       </div>
     </div>
@@ -80,3 +102,33 @@ export default function Dashboard() {
 }
 
 //dashboardData?.allRequestedRides
+
+//  {
+//    /* Rides Posted */
+//  }
+//  <div className="space-y-6">
+//    <p className="text-2xl font-bold text-center font-mono">Requested Rides</p>
+//    {/* {for the normal user} */}
+//    {dashboardData?.allRequestedRides?.length > 0 &&
+//      dashboardData?.allRequestedRides.map((ride, indx) => (
+//        <RenderPostedRides
+//          key={indx}
+//          ride={ride}
+//          dashboardData={dashboardData}
+//          setDashboardData={setDashboardData}
+//          currUserID={dashboardData.currLoggedUser._id}
+//        ></RenderPostedRides>
+//      ))}
+
+//    {/* {for the Host user} */}
+//    {dashboardData?.hostedRides?.length > 0 &&
+//      dashboardData?.hostedRides.map((ride, indx) => (
+//        <ShowRideRequestsForHost
+//          key={indx}
+//          ride={ride}
+//          dashboardData={dashboardData}
+//          setDashboardData={setDashboardData}
+//          currUserID={dashboardData.currLoggedUser._id}
+//        ></ShowRideRequestsForHost>
+//      ))}
+//  </div>;
